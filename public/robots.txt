@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Allow: /films
+Allow: /free-movie-stream
+Allow: /free-movie-stream?*
+
+# Explicit permissions for Googlebot and AdSense crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+Sitemap: https://www.eurofilm.xyz/sitemap.xml
+Sitemap: https://www.eurofilm.xyz/sitemap_index.xml

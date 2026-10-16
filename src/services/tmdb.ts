@@ -63,71 +63,162 @@ export interface Genre {
   name: string;
 }
 
-const FALLBACK_POPULAR: Movie[] = [
+export const FALLBACK_POPULAR: Movie[] = [
   {
-    id: 550,
-    title: 'Fight Club',
-    original_title: 'Fight Club',
-    overview: 'An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into much more.',
-    poster_path: '/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg',
-    backdrop_path: '/hZkgoQYus5vegHoetLkCJzb17zJ.jpg',
-    release_date: '1999-10-15',
-    vote_average: 8.4,
-    vote_count: 28000,
-    popularity: 95.5,
-    genre_ids: [18, 53],
+    id: 1561726,
+    title: 'Masterplan',
+    original_title: 'Masterplan',
+    overview: 'When a legendary thief sets his sights on the Mona Lisa, he recruits two young strangers to help him before revealing they are long-lost siblings... and oh yes, by the way, he is their father. Thrown into a chaotic reunion, this new family must pull off the heist of the century.',
+    poster_path: '/5xmXVd7nCK3tAo34XkO58SxUCip.jpg',
+    backdrop_path: '/dgUDj84BWtW6EZzee8BkgKnjDhh.jpg',
+    release_date: '2026-10-16',
+    vote_average: 6.8,
+    vote_count: 5,
+    popularity: 110.9,
+    genre_ids: [28, 53],
   },
   {
-    id: 155,
-    title: 'The Dark Knight',
-    original_title: 'The Dark Knight',
-    overview: 'Batman raises the stakes in his war on crime with the help of Lt. Jim Gordon and District Attorney Harvey Dent.',
-    poster_path: '/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
-    backdrop_path: '/dqK9Hag1054tghRQSqLSfrkvQnA.jpg',
-    release_date: '2008-07-18',
+    id: 969681,
+    title: 'Spider-Man: Brand New Day',
+    original_title: 'Spider-Man: Brand New Day',
+    overview: "Fighting crime full-time as Spider-Man in a world that doesn't remember him sparks a change in Peter Parker he may not have the power to control. But that transformation might also be the only thing that can stop a shocking new threat.",
+    poster_path: '/bjiS5ipwxb9JFy3XRRN4OAilSeX.jpg',
+    backdrop_path: '/4tjxYg2AbOzzG9G1YuiT2NzYhlH.jpg',
+    release_date: '2026-07-29',
     vote_average: 8.5,
-    vote_count: 32000,
-    popularity: 110.2,
-    genre_ids: [18, 28, 80, 53],
+    vote_count: 5535,
+    popularity: 713.4,
+    genre_ids: [878, 28, 12],
   },
   {
-    id: 27205,
-    title: 'Inception',
-    original_title: 'Inception',
-    overview: 'Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life.',
-    poster_path: '/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg',
-    backdrop_path: '/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg',
-    release_date: '2010-07-16',
-    vote_average: 8.4,
-    vote_count: 36000,
-    popularity: 88.4,
-    genre_ids: [28, 878, 12],
+    id: 1153576,
+    title: 'Street Fighter',
+    original_title: 'Street Fighter',
+    overview: 'In 1993, estranged Street Fighters Ryu and Ken Masters are thrown back into combat when the mysterious Chun-Li recruits them for the next World Warrior Tournament: a brutal clash of fists, fate, and fury.',
+    poster_path: '/dJPT2Uf12X6aFg8i5N67NTpIZ9t.jpg',
+    backdrop_path: '/zDE9hd1SG9695YncbZGjSf7Z9Jk.jpg',
+    release_date: '2026-10-13',
+    vote_average: 6.4,
+    vote_count: 34,
+    popularity: 117.2,
+    genre_ids: [28, 14],
   },
   {
-    id: 157336,
-    title: 'Interstellar',
-    original_title: 'Interstellar',
-    overview: 'The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel.',
-    poster_path: '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
-    backdrop_path: '/xJHokMbljvjADYdit5fK5VQsXEG.jpg',
-    release_date: '2014-11-07',
-    vote_average: 8.4,
-    vote_count: 34000,
-    popularity: 92.1,
-    genre_ids: [12, 18, 878],
+    id: 1623256,
+    title: 'The Storm',
+    original_title: 'Stormen',
+    overview: 'When a storm traps old university pals at a luxury lodge, their civilized birthday bash spirals into a cyclone of betrayals, grudges and unfiltered chaos.',
+    poster_path: '/5YNjTi5AhbSM4hDOynJcgFfvKRn.jpg',
+    backdrop_path: '/zN5mRDu6jOYt5EJGYGjhWgOGwor.jpg',
+    release_date: '2026-10-15',
+    vote_average: 8.3,
+    vote_count: 10,
+    popularity: 39.5,
+    genre_ids: [35, 18],
   },
   {
-    id: 238,
-    title: 'The Godfather',
-    original_title: 'The Godfather',
-    overview: 'Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family.',
-    poster_path: '/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
-    backdrop_path: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    release_date: '1972-03-24',
-    vote_average: 8.7,
-    vote_count: 19000,
-    popularity: 115.0,
-    genre_ids: [18, 80],
+    id: 1058424,
+    title: 'Hope',
+    original_title: '호프',
+    overview: 'In the remote South Korean village of Hope Harbor, police chief Bum-seok and officer Sung-ae are called to investigate a mysterious creature wreaking havoc on the community.',
+    poster_path: '/bcK5naYzzfY0JBCgrPrsrbV6NO1.jpg',
+    backdrop_path: '/ujUwzNV8ZkOzZonvhhHsc9KOKDf.jpg',
+    release_date: '2026-07-15',
+    vote_average: 7.0,
+    vote_count: 191,
+    popularity: 214.2,
+    genre_ids: [878, 9648, 28],
+  },
+  {
+    id: 1288069,
+    title: 'Tenzing',
+    original_title: 'Tenzing',
+    overview: 'A determined man embarks on a high-stakes quest—and defies seemingly impossible odds—to fulfill his dream of being the first to reach the summit of Mount Everest.',
+    poster_path: '/eI0QW02PYqhnmIvLRdn9vrfVVP7.jpg',
+    backdrop_path: '/wUe0QbbPDU2BD3L2QnsZlAr55Je.jpg',
+    release_date: '2026-10-09',
+    vote_average: 6.3,
+    vote_count: 7,
+    popularity: 70.5,
+    genre_ids: [18, 36],
+  },
+  {
+    id: 1381078,
+    title: 'Love of Your Life',
+    original_title: 'Love of Your Life',
+    overview: 'After a chance encounter sparks a sweeping romance, Maya’s future is suddenly upended, sending her on an unexpected journey to love and live again.',
+    poster_path: '/pJ8RXWNO7aB19B0tUvLQqXTt7Yo.jpg',
+    backdrop_path: '/mqYqKvrKTgMvK50VtEDZlYFsnHz.jpg',
+    release_date: '2026-10-07',
+    vote_average: 6.5,
+    vote_count: 40,
+    popularity: 90.0,
+    genre_ids: [10749, 18],
+  },
+  {
+    id: 1255833,
+    title: 'Whalefall',
+    original_title: 'Whalefall',
+    overview: 'Following the death of his father, Jay Gardiner goes diving off the central Coast of California in search of his remains, but is swallowed by a massive sperm whale with only one hour of oxygen left.',
+    poster_path: '/vjTYUTgh9nO88i6HZ4YPRhiFL05.jpg',
+    backdrop_path: '/shW2jHkQLZVv4Fko2rJDqTGU0gx.jpg',
+    release_date: '2026-10-14',
+    vote_average: 7.5,
+    vote_count: 20,
+    popularity: 67.2,
+    genre_ids: [53],
+  },
+  {
+    id: 1302904,
+    title: 'Practical Magic 2',
+    original_title: 'Practical Magic 2',
+    overview: 'The Owens sisters must confront the dark curse that threatens to unravel their family once and for all.',
+    poster_path: '/ogwQOLbCfncjvBhFb5l0OmQH8KC.jpg',
+    backdrop_path: '/oIglj0Jy9duG4LnrRUpH8n001Pk.jpg',
+    release_date: '2026-09-09',
+    vote_average: 6.7,
+    vote_count: 182,
+    popularity: 142.9,
+    genre_ids: [10749, 14, 35],
+  },
+  {
+    id: 1284186,
+    title: 'Sacrifice',
+    original_title: 'Sacrifice',
+    overview: 'During a star-studded charity gala brimming with celebrities and billionaires, a movie star in the midst of an existential crisis is taken hostage by a radical warrior.',
+    poster_path: '/SGH7mlgfDyGgRCi2At62Ljg3zV.jpg',
+    backdrop_path: '/oAUf1pvGlafCZVlEuPt1JyONHR1.jpg',
+    release_date: '2026-04-09',
+    vote_average: 5.7,
+    vote_count: 33,
+    popularity: 40.9,
+    genre_ids: [12, 35, 28],
+  },
+  {
+    id: 1234139,
+    title: 'Jailer 2',
+    original_title: 'ஜெயிலர் 2',
+    overview: 'When a dangerous syndicate expands its reach to threaten his family’s peace, retired jailer Tiger Muthuvel Pandian goes undercover as a driver to protect his home.',
+    poster_path: '/upwdEyhhYZ7pT2hD535fr2MGfpx.jpg',
+    backdrop_path: '/zpHTOdRl7GEPqFsDGqsN6Hi9Ylt.jpg',
+    release_date: '2026-10-14',
+    vote_average: 8.0,
+    vote_count: 4,
+    popularity: 69.9,
+    genre_ids: [28, 35],
+  },
+  {
+    id: 1400940,
+    title: 'Clayface',
+    original_title: 'Clayface',
+    overview: 'Matt Hagen’s meteoric rise from Gotham street kid to Hollywood leading man is tragically cut short when a local crime boss leaves him disfigured, leading to a path of revenge.',
+    poster_path: '/5jCpQnWPikggmQZoDp1eAi6BI6w.jpg',
+    backdrop_path: '/kVtOcoUJ68chBD2tmERkdWz7lK5.jpg',
+    release_date: '2026-10-21',
+    vote_average: 8.6,
+    vote_count: 6,
+    popularity: 41.6,
+    genre_ids: [27, 53, 878],
   },
 ];
 
@@ -306,8 +397,104 @@ export const FALLBACK_ANIME_MOVIES: Movie[] = [
   },
 ];
 
-export async function getPopularMovies(page = 1, count = 20): Promise<{ results: Movie[]; total_pages: number }> {
+export async function getTrendingMovies(
+  timeWindow: 'day' | 'week' = 'day',
+  page = 1
+): Promise<{ results: Movie[]; total_pages: number }> {
   try {
+    const data = await fetchFromTMDB<{ results: Movie[]; total_pages: number }>(
+      `/trending/movie/${timeWindow}`,
+      { page: String(page) }
+    );
+    if (data && Array.isArray(data.results) && data.results.length > 0) {
+      return data;
+    }
+    return { results: FALLBACK_POPULAR, total_pages: 1 };
+  } catch (err) {
+    console.warn('Using fallback trending movies:', err);
+    return { results: FALLBACK_POPULAR, total_pages: 1 };
+  }
+}
+
+export async function getLatestMovies(page = 1): Promise<{ results: Movie[]; total_pages: number }> {
+  try {
+    const [trending, nowPlaying] = await Promise.allSettled([
+      getTrendingMovies('day', page),
+      fetchFromTMDB<{ results: Movie[]; total_pages: number }>('/movie/now_playing', { page: String(page) }),
+    ]);
+
+    const results: Movie[] = [];
+    const seen = new Set<number>();
+
+    if (trending.status === 'fulfilled' && trending.value.results) {
+      for (const m of trending.value.results) {
+        if (!seen.has(m.id)) {
+          seen.add(m.id);
+          results.push(m);
+        }
+      }
+    }
+
+    if (nowPlaying.status === 'fulfilled' && nowPlaying.value.results) {
+      for (const m of nowPlaying.value.results) {
+        if (!seen.has(m.id)) {
+          seen.add(m.id);
+          results.push(m);
+        }
+      }
+    }
+
+    if (results.length > 0) {
+      return { results, total_pages: 10 };
+    }
+    return { results: FALLBACK_POPULAR, total_pages: 1 };
+  } catch (err) {
+    console.warn('Error fetching latest movies:', err);
+    return { results: FALLBACK_POPULAR, total_pages: 1 };
+  }
+}
+
+export async function getPopularMovies(page = 1, count = 25): Promise<{ results: Movie[]; total_pages: number }> {
+  try {
+    // When on page 1, always fetch latest trending & now playing movies so homepage displays freshest latest movies
+    if (page === 1) {
+      try {
+        const [trendingData, popularData] = await Promise.allSettled([
+          fetchFromTMDB<{ results: Movie[]; total_pages: number }>('/trending/movie/day', { page: '1' }),
+          fetchFromTMDB<{ results: Movie[]; total_pages: number }>('/movie/now_playing', { page: '1' }),
+        ]);
+
+        const combined: Movie[] = [];
+        const seen = new Set<number>();
+
+        if (trendingData.status === 'fulfilled' && trendingData.value.results) {
+          for (const m of trendingData.value.results) {
+            if (!seen.has(m.id)) {
+              seen.add(m.id);
+              combined.push(m);
+            }
+          }
+        }
+
+        if (popularData.status === 'fulfilled' && popularData.value.results) {
+          for (const m of popularData.value.results) {
+            if (!seen.has(m.id)) {
+              seen.add(m.id);
+              combined.push(m);
+            }
+          }
+        }
+
+        if (combined.length > 0) {
+          const totalPages =
+            trendingData.status === 'fulfilled' ? trendingData.value.total_pages : 50;
+          return { results: combined.slice(0, Math.max(count, combined.length)), total_pages: totalPages };
+        }
+      } catch {
+        // fallback to standard popular
+      }
+    }
+
     const data = await fetchFromTMDB<{ results: Movie[]; total_pages: number }>('/movie/popular', { page: String(page) });
     if (data && Array.isArray(data.results) && data.results.length > 0) {
       if (count > 20 && page === 1) {

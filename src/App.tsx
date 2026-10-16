@@ -4,6 +4,8 @@ import {
   Movie,
   Genre,
   getPopularMovies,
+  getTrendingMovies,
+  getLatestMovies,
   getNowPlayingMovies,
   getTopRatedMovies,
   getUpcomingMovies,
@@ -12,6 +14,7 @@ import {
   getGenres,
   getBackdropUrl,
   setTmdbLanguage,
+  FALLBACK_POPULAR,
 } from './services/tmdb';
 import {
   fetchTopAnime,
@@ -72,6 +75,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowUpDown,
+  Clock,
 } from 'lucide-react';
 
 export default function App() {
@@ -85,6 +89,10 @@ export default function App() {
   // Movie Catalog State
   const [movies, setMovies] = useState<Movie[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
+  // 12-Hour Trending Trailer State (Rotates every 12H through latest trending movies)
+  const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
+  const [trendingIndexOffset, setTrendingIndexOffset] = useState<number>(0);
+  const [now, setNow] = useState<number>(() => Date.now());
   const [activeTab, setActiveTab] = useState<string>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -149,17 +157,32 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Fetch genres and anime on initial load and when language changes
+  // Fetch genres, latest trending movies, and anime on initial load and when language changes
   useEffect(() => {
     document.documentElement.lang = currentLanguage;
     setTmdbLanguage(currentLanguage);
     getGenres()
       .then((data) => setGenres(data))
       .catch((err) => console.error('Failed to load genres:', err));
+    getTrendingMovies('day', 1)
+      .then((data) => {
+        if (data && Array.isArray(data.results) && data.results.length > 0) {
+          setTrendingMovies(data.results);
+        }
+      })
+      .catch((err) => console.warn('Failed to load trending movies for 12H trailer:', err));
     fetchTopAnime(1)
       .then((data) => setAnimeList(data))
       .catch(() => {});
   }, [currentLanguage]);
+
+  // Keep 12H clock synchronized to automatically transition at 12H mark
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNow(Date.now());
+    }, 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   const genreMap = useMemo(() => {
     const map = new Map<number, string>();
@@ -419,6 +442,7 @@ export default function App() {
 
   const handleTabSelect = (tab: string, label?: string) => {
     setActiveTab(tab);
+    setTrendingIndexOffset(0);
     const resolvedLabel = label || tab.replace(/[-_]/g, ' ');
     setActiveTabLabel(resolvedLabel);
     trackCategorySelect(tab, resolvedLabel);
@@ -594,11 +618,41 @@ export default function App() {
     return movies;
   }, [movies, ageRatingFilter, activeTab, searchQuery]);
 
-  // Featured hero movie
+  // 12-hour period calculation (12 hours = 43,200,000 ms)
+  const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
+  const current12HSlot = Math.floor(now / TWELVE_HOURS_MS);
+
+  // Time remaining until the next 12-hour rotation
+  const msUntilNext12H = TWELVE_HOURS_MS - (now % TWELVE_HOURS_MS);
+  const hoursRemaining12H = Math.max(0, Math.floor(msUntilNext12H / (60 * 60 * 1000)));
+  const minutesRemaining12H = Math.max(0, Math.floor((msUntilNext12H % (60 * 60 * 1000)) / (60 * 1000)));
+
+  // Candidate pool of top trending movies with valid visual backdrops and posters
+  const trendingCandidates = useMemo(() => {
+    const source =
+      trendingMovies.length > 0
+        ? trendingMovies
+        : displayedMovies.length > 0
+        ? displayedMovies
+        : FALLBACK_POPULAR;
+    const withVisuals = source.filter((m) => m.backdrop_path && m.poster_path);
+    return withVisuals.length > 0 ? withVisuals : source;
+  }, [trendingMovies, displayedMovies]);
+
+  // Deterministic 12-hour rotation index + optional interactive user offset
+  const activeFeaturedIndex = useMemo(() => {
+    if (trendingCandidates.length === 0) return 0;
+    const baseIndex = current12HSlot % trendingCandidates.length;
+    const target = (baseIndex + trendingIndexOffset) % trendingCandidates.length;
+    return target < 0 ? target + trendingCandidates.length : target;
+  }, [trendingCandidates.length, current12HSlot, trendingIndexOffset]);
+
+  // Featured hero movie (rotates every 12H through latest trending movies)
   const featuredMovie = useMemo(() => {
-    if (searchQuery || displayedMovies.length === 0 || currentPage !== 1) return null;
-    return displayedMovies[0];
-  }, [displayedMovies, searchQuery, currentPage]);
+    if (searchQuery || currentPage !== 1 || (activeTab !== 'popular' && activeTab !== 'trending')) return null;
+    if (trendingCandidates.length === 0) return null;
+    return trendingCandidates[activeFeaturedIndex] || trendingCandidates[0];
+  }, [searchQuery, currentPage, activeTab, trendingCandidates, activeFeaturedIndex]);
 
   return (
     <div className="relative min-h-screen w-full bg-white selection:bg-zinc-200 selection:text-zinc-900 font-sans antialiased text-zinc-900 overflow-x-hidden flex flex-col justify-between">
@@ -660,33 +714,46 @@ export default function App() {
         ) : (
           /* CONDITION 2: MAIN MULTI-API CATALOG & ENTERTAINMENT SECTIONS VIEW */
           <>
-            {/* Featured Hero Banner */}
+            {/* Featured Hero Banner with 12H Rotation */}
             {featuredMovie && !searchQuery && activeTab === 'popular' && (
               <section className="relative bg-zinc-950 text-white overflow-hidden border-b border-zinc-200">
                 <div className="absolute inset-0 z-0 opacity-85">
                   <img
+                    key={`backdrop-${featuredMovie.id}`}
                     src={getBackdropUrl(featuredMovie.backdrop_path, 'w1280')}
                     alt={featuredMovie.title}
-                    className="w-full h-full object-cover object-center brightness-105 contrast-105"
+                    className="w-full h-full object-cover object-center brightness-105 contrast-105 transition-opacity duration-700"
                     loading="eager"
                     decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/85 via-zinc-950/25 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/85 via-zinc-950/35 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/40 to-transparent" />
                 </div>
 
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 flex flex-col md:flex-row items-center justify-between gap-8">
-                  <div className="max-w-2xl space-y-4 bg-zinc-950/60 backdrop-blur-xs p-6 sm:p-8 rounded-2xl border border-white/15 shadow-2xl">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-zinc-800/90 text-amber-400 text-xs font-semibold uppercase tracking-wider backdrop-blur-xs border border-zinc-700">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      {ui.featuredTrendingTrailer}
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="max-w-2xl space-y-4 bg-zinc-950/70 backdrop-blur-xs p-6 sm:p-8 rounded-2xl border border-white/15 shadow-2xl">
+                    {/* Header tags: 12H rotation status and countdown */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-wider backdrop-blur-xs border border-amber-500/40">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                        {ui.featuredTrendingTrailer}
+                      </div>
+
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-zinc-800/90 text-zinc-300 text-xs font-medium border border-zinc-700">
+                        <Clock className="w-3 h-3 text-amber-400" />
+                        <span>12H Rotation ({activeFeaturedIndex + 1}/{trendingCandidates.length})</span>
+                      </div>
+
+                      <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-zinc-900/90 text-zinc-400 text-xs border border-zinc-800" title="Auto-rotates to the next trending movie every 12 hours">
+                        <span>Rotates in {hoursRemaining12H}h {minutesRemaining12H}m</span>
+                      </div>
                     </div>
 
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight drop-shadow-sm">
                       {featuredMovie.title}
                     </h1>
 
-                    <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-zinc-200 font-medium">
+                    <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-zinc-200 font-medium">
                       <span className="flex items-center gap-1 bg-amber-500/25 text-amber-300 px-2.5 py-1 rounded border border-amber-500/40">
                         <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                         {typeof featuredMovie.vote_average === 'number'
@@ -695,9 +762,9 @@ export default function App() {
                         / 10
                       </span>
                       {featuredMovie.release_date && (
-                        <span className="flex items-center gap-1 text-zinc-300">
+                        <span className="flex items-center gap-1 text-zinc-200 bg-zinc-800/80 px-2.5 py-1 rounded border border-zinc-700">
                           <Calendar className="w-3.5 h-3.5 text-zinc-400" />
-                          {featuredMovie.release_date.split('-')[0]}
+                          {featuredMovie.release_date}
                         </span>
                       )}
                       {featuredMovie.genre_ids && featuredMovie.genre_ids.length > 0 && (
@@ -715,20 +782,71 @@ export default function App() {
                       {featuredMovie.overview}
                     </p>
 
-                    <div className="pt-2 flex flex-wrap items-center gap-3">
-                      <button
-                        onClick={() => handleOpenWatchPage(featuredMovie)}
-                        className="px-5 py-2.5 bg-white text-zinc-950 hover:bg-zinc-100 font-bold text-xs sm:text-sm rounded-md flex items-center gap-2 shadow-lg transition-transform active:scale-95 cursor-pointer"
-                      >
-                        <Play className="w-4 h-4 fill-zinc-950" />
-                        {ui.watchTrailerPage}
-                      </button>
-                      <button
-                        onClick={() => setIsAboutOpen(true)}
-                        className="px-4 py-2.5 bg-zinc-800/90 hover:bg-zinc-800 text-white font-medium text-xs sm:text-sm rounded-md border border-zinc-700 transition-colors cursor-pointer"
-                      >
-                        {ui.aboutEuroFilm}
-                      </button>
+                    <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <button
+                          onClick={() => handleOpenWatchPage(featuredMovie)}
+                          className="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-zinc-950 font-bold text-xs sm:text-sm rounded-md flex items-center gap-2 shadow-lg transition-transform active:scale-95 cursor-pointer"
+                        >
+                          <Play className="w-4 h-4 fill-zinc-950" />
+                          {ui.watchTrailerPage}
+                        </button>
+                        <button
+                          onClick={() => setIsAboutOpen(true)}
+                          className="px-4 py-2.5 bg-zinc-800/90 hover:bg-zinc-800 text-white font-medium text-xs sm:text-sm rounded-md border border-zinc-700 transition-colors cursor-pointer"
+                        >
+                          {ui.aboutEuroFilm}
+                        </button>
+                      </div>
+
+                      {/* 12H Carousel Navigation & Dots */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setTrendingIndexOffset((prev) => prev - 1)}
+                          className="p-2 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700 transition-colors cursor-pointer"
+                          aria-label="Previous 12H Trending Trailer"
+                          title="Previous 12H Trending Trailer"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+
+                        <div className="hidden sm:flex items-center gap-1.5 px-2">
+                          {trendingCandidates.slice(0, 8).map((c, idx) => (
+                            <button
+                              key={c.id}
+                              onClick={() => {
+                                const base = current12HSlot % trendingCandidates.length;
+                                setTrendingIndexOffset(idx - base);
+                              }}
+                              className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                                idx === activeFeaturedIndex % 8
+                                  ? 'w-5 bg-amber-400'
+                                  : 'w-1.5 bg-zinc-600 hover:bg-zinc-400'
+                              }`}
+                              aria-label={`Go to trending trailer ${idx + 1}`}
+                            />
+                          ))}
+                        </div>
+
+                        <button
+                          onClick={() => setTrendingIndexOffset((prev) => prev + 1)}
+                          className="p-2 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700 transition-colors cursor-pointer"
+                          aria-label="Next 12H Trending Trailer"
+                          title="Next 12H Trending Trailer"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+
+                        {trendingIndexOffset !== 0 && (
+                          <button
+                            onClick={() => setTrendingIndexOffset(0)}
+                            className="text-[11px] text-amber-400 hover:underline ml-1 cursor-pointer font-semibold"
+                            title="Reset to current 12-hour featured trailer"
+                          >
+                            Live 12H
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

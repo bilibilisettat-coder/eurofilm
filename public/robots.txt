@@ -15,4 +15,3 @@ User-agent: AdsBot-Google
 Allow: /
 
 Sitemap: https://eurofilm.xyz/sitemap.xml
-Sitemap: https://eurofilm.xyz/sitemap_index.xml

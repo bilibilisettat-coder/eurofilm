@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Core Films & Streaming Catalogs -->
+  <url>
+    <loc>https://eurofilm.xyz/films</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://eurofilm.xyz/free-movie-stream</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://eurofilm.xyz/free-movie-stream?tab=popular</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eurofilm.xyz/free-movie-stream?tab=now_playing</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eurofilm.xyz/free-movie-stream?tab=top_rated</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eurofilm.xyz/free-movie-stream?tab=upcoming</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eurofilm.xyz/free-movie-stream?tab=anime</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eurofilm.xyz/free-movie-stream?tab=tv_shows</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eurofilm.xyz/free-movie-stream?tab=indian_movies</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>

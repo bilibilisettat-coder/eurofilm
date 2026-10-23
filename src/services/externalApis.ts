@@ -1,5 +1,5 @@
 // External multi-API integration service:
-// 1. Jikan API v4 + Curated Anime (with Souryo to Majiwaru Shikiyoku, The Simpsons, Demon Slayer, etc.)
+// 1. Jikan API v4 (safe-for-work only) + curated anime (The Simpsons, Demon Slayer, etc.)
 // 2. TV Shows (Watch What Happens Live with Andy Cohen, Tonight Show, Jimmy Kimmel, SNL, etc.)
 // 3. TV Series (Game of Thrones, Breaking Bad, Stranger Things, Succession, etc.)
 // 4. TMDB Indian Cinema API (Bollywood, Tollywood, Kollywood)
@@ -91,7 +91,7 @@ export async function fetchTopAnime(page = 1): Promise<AnimeItem[]> {
     // 1B. Fetch Jikan anime
     let jikanList: AnimeItem[] = [];
     try {
-      const res = await fetch(`https://api.jikan.moe/v4/top/anime?page=${page}&limit=20`);
+      const res = await fetch(`https://api.jikan.moe/v4/top/anime?page=${page}&limit=20&sfw=true`);
       if (res.ok) {
         const data = await res.json();
         if (data.data && Array.isArray(data.data)) {
@@ -270,19 +270,6 @@ export async function fetchLiveMovieNews(): Promise<ExternalNewsArticle[]> {
 
 // Curated Anime Collection
 export const CURATED_ANIME_LIST: AnimeItem[] = [
-  {
-    id: 34823,
-    title: 'Souryo to Majiwaru Shikiyoku',
-    titleEnglish: 'Souryo to Majiwaru Shikiyoku no Yoru ni...',
-    synopsis: 'Mio reunites with her former school crush Kujo at a reunion, finding that he has inherited his family temple as a monk. An undeniable forbidden passion blooms behind sacred walls.',
-    imageUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500',
-    trailerYoutubeId: 'v8y2bSflq2A',
-    score: 7.5,
-    year: 2017,
-    episodes: 12,
-    genres: ['Romance', 'Ecchi', 'Drama', 'Anime Short'],
-    status: 'Finished Airing',
-  },
   {
     id: 99901,
     title: 'The Simpsons',

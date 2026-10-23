@@ -1,0 +1,13 @@
+// Cloudflare Worker (static assets only). Deployed by Cloudflare Workers Builds on push.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "eurofilm",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // Unknown URLs get dist/404.html with a real 404 status (no more soft 404s).
+    "not_found_handling": "404-page",
+    // Serves /anime from anime.html and /blog/<slug> from blog/<slug>.html without redirects.
+    "html_handling": "auto-trailing-slash"
+  }
+}

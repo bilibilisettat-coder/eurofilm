@@ -56,7 +56,6 @@ export function isAnimeOrCartoon(item: {
 
   // 2. Specific verified cartoons & animes
   const famousAnimeCartoons = [
-    'souryo to majiwaru shikiyoku',
     'simpsons',
     'demon slayer',
     'attack on titan',

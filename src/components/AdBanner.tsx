@@ -43,9 +43,9 @@ export const AdBanner: React.FC<AdBannerProps> = ({
               </div>
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <h4 className="text-sm sm:text-base font-bold text-white group-hover:text-amber-400 transition-colors">
+                  <p className="text-sm sm:text-base font-bold text-white group-hover:text-amber-400 transition-colors">
                     {title || 'High-Speed 4K Stream Mirror (Sponsored Partner)'}
-                  </h4>
+                  </p>
                   <span className="hidden sm:inline-flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
                     <ShieldCheck className="w-3.5 h-3.5" /> Ultra HD Fast Load
                   </span>
@@ -124,9 +124,9 @@ export const AdBanner: React.FC<AdBannerProps> = ({
               <span className="px-2 py-0.5 rounded bg-amber-400 text-zinc-950 text-[10px] font-black uppercase tracking-wider">
                 AD SPONSOR
               </span>
-              <h5 className="text-sm sm:text-base font-bold text-white hover:text-amber-300 transition-colors">
+              <p className="text-sm sm:text-base font-bold text-white hover:text-amber-300 transition-colors">
                 {title || 'Exclusive Cinema Streaming & High-Speed Media Access'}
-              </h5>
+              </p>
             </div>
             <p className="text-xs text-zinc-300">
               {subtitle || 'Support EuroFilm editorial by checking out our verified streaming and digital partner offer.'}

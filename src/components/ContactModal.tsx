@@ -54,14 +54,14 @@ export function ContactModal({ isOpen, onClose, currentLanguage = 'en' }: Contac
         </div>
 
         <p className="text-xs sm:text-sm text-zinc-600 mb-5 leading-relaxed">
-          {m.description.split('yourmovies@movies.com')[0]}
+          {m.description.split('contact@eurofilm.xyz')[0]}
           <a
-            href="mailto:yourmovies@movies.com"
+            href="mailto:contact@eurofilm.xyz"
             className="font-semibold text-zinc-950 underline hover:text-zinc-700"
           >
-            yourmovies@movies.com
+            contact@eurofilm.xyz
           </a>
-          {m.description.split('yourmovies@movies.com')[1] || '.'}
+          {m.description.split('contact@eurofilm.xyz')[1] || '.'}
         </p>
 
         {submitted ? (

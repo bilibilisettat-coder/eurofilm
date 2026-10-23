@@ -75,8 +75,8 @@ export function AboutModal({ isOpen, onClose, currentLanguage = 'en' }: AboutMod
               <h3 className="font-semibold text-zinc-900 mb-0.5">{m.f4Title}</h3>
               <p className="text-xs text-zinc-600 leading-relaxed">
                 {m.f4Desc}{' '}
-                <a href="mailto:yourmovies@movies.com" className="font-semibold underline text-zinc-900">
-                  yourmovies@movies.com
+                <a href="mailto:contact@eurofilm.xyz" className="font-semibold underline text-zinc-900">
+                  contact@eurofilm.xyz
                 </a>.
               </p>
             </div>

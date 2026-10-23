@@ -1,19 +1,23 @@
-# EuroFilm - Premier Cinema Discovery, Official Trailers & Longform Film Analysis
+# EuroFilm
 
-> High-performance, SEO-optimized cinema portal providing official HD movie trailers, 100% curated Anime Trailers & Top Series, Indian Bollywood Cinema spotlight, Oscars archive, and +2500 word critical film essays.
-> Canonical Home URL Slug: https://eurofilm.xyz/free-movie-stream
-> Inquiries & Editorial Contact: yourmovies@movies.com
+> EuroFilm is a movie discovery site: official trailers, ratings and release dates for current, upcoming and top-rated films, anime and TV series, plus longform movie reviews.
 
-## Core Sections & Features
-- **Free Movie Stream**: Instant access to official high-definition movie trailers, plot summaries, ratings, release dates, and cast lists.
-- **Anime Trailers & Top Series**: Strictly filtered cartoons and animes featuring classics and latest sensations (Souryo to Majiwaru Shikiyoku, The Simpsons, Demon Slayer, Attack on Titan, Spirited Away, Jujutsu Kaisen). Powered by Jikan REST API v4 and an internal keyword filter (anime, children, child, boy, girl, manga, toddler, cartoon).
-- **EuroFilm Critical Blog**: Twelve in-depth, +2500 word critical essays authored in a first-person, skeptical, sarcastic, and uncompromised verdict tone by Chief Critic Julian Vance.
-- **Bollywood Cinema Spotlight**: Dedicated Indian box-office discoveries and official Bollywood trailers.
-- **Oscars (Academy Award Winners)**: Historical record of Best Picture winners, directing triumphs, and acting honors.
-- **Multi-Language Localization**: Full dynamic translation across 10 global languages (English, French, Spanish, Italian, German, Russian, Chinese, Arabic, Nepali, Hindi).
-- **Age Rating Filter**: Discrete filtering for -18 (Youth & Family) and +18 (Mature & Adult) cinema.
+Contact: contact@eurofilm.xyz
 
-## Technical & Indexation Standards
-- Schema.org JSON-LD graph (WebSite, Organization, BreadcrumbList, Movie, BlogPosting, FAQPage).
-- Self-referencing canonical URLs matching /free-movie-stream.
-- Zero tracking bloat, lazy-loaded compressed imagery, and strict GTmetrix performance standards.
+## Sections
+- [Popular movie trailers](https://eurofilm.xyz/): what audiences are watching this week
+- [Movies in theaters now](https://eurofilm.xyz/now-playing)
+- [Upcoming movies](https://eurofilm.xyz/upcoming): new trailers and release dates
+- [Top rated movies](https://eurofilm.xyz/top-rated)
+- [Anime](https://eurofilm.xyz/anime): top anime series and anime film trailers
+- [TV shows](https://eurofilm.xyz/tv-shows)
+- [Bollywood and Indian movies](https://eurofilm.xyz/bollywood)
+- [Oscar winners](https://eurofilm.xyz/oscars)
+- [Movie news](https://eurofilm.xyz/news)
+- [Blog: movie reviews and film essays](https://eurofilm.xyz/blog)
+
+## Data sources
+Movie data and trailers come from TMDB and YouTube; anime data from the Jikan (MyAnimeList) API.
+
+## Sitemap
+https://eurofilm.xyz/sitemap.xml

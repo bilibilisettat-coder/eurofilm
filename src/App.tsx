@@ -1,6 +1,48 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ALL_RAW_KEYWORDS } from './data/keywords';
-import { syncCanonical } from './utils/canonical';
+import { setPageMeta, syncCanonical } from './utils/canonical';
+import {
+  SECTION_ROUTES,
+  blogPath,
+  blogSlugFromPath,
+  canonicalTab,
+  sectionForPath,
+  sectionForTab,
+  urlForTab,
+} from './data/routes';
+
+/** Views that render their own <h1>. Everything else gets the section H1 from App. */
+const VIEWS_WITH_OWN_H1 = new Set([
+  'oscars', 'top_news', 'movie-news', 'celebrity-news', 'tv-news', 'top_box_office', 'top-box-office',
+  'eurofilm-blog', 'imdb-podcasts', 'polls', 'community-polls', 'contributor-zone', 'help-center', 'eurofilm-labs',
+]);
+function pageHasOwnH1(tab: string): boolean {
+  return VIEWS_WITH_OWN_H1.has(tab);
+}
+
+/** Tab for the current URL: /blog/*, clean section paths, or /?tab= for non-indexed views. */
+function tabFromLocation(): string {
+  const { pathname, search } = window.location;
+  if (blogSlugFromPath(pathname)) return 'eurofilm-blog';
+  const section = sectionForPath(pathname);
+  if (section && section.path !== '/') return section.tab;
+  return new URLSearchParams(search).get('tab') || 'popular';
+}
+
+/** Resolves the first tab and upgrades legacy ?blog= / ?tab= URLs to clean paths. */
+function resolveInitialTab(): string {
+  const params = new URLSearchParams(window.location.search);
+  const legacyBlog = params.get('blog');
+  if (legacyBlog && /^[a-z0-9-]+$/.test(legacyBlog)) {
+    window.history.replaceState({}, '', blogPath(legacyBlog));
+    return 'eurofilm-blog';
+  }
+  const legacyTab = params.get('tab');
+  if (legacyTab && sectionForTab(legacyTab) && !params.get('watch')) {
+    window.history.replaceState({}, '', urlForTab(legacyTab));
+  }
+  return tabFromLocation();
+}
 import {
   Movie,
   Genre,
@@ -96,17 +138,10 @@ export default function App() {
   const [now, setNow] = useState<number>(() => Date.now());
   const [activeTab, setActiveTab] = useState<string>(() => {
     try {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('blog')) return 'eurofilm-blog';
-      const tabParam = params.get('tab');
-      if (tabParam) return tabParam;
-      const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
-      if (path === 'films' || path === 'free-movie-stream') return 'popular';
-      if (path && path !== 'index.html') return path;
+      return resolveInitialTab();
     } catch {
-      // Fallback
+      return 'popular';
     }
-    return 'popular';
   });
   const [activeTabLabel, setActiveTabLabel] = useState<string>('Popular Movies');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -148,9 +183,15 @@ export default function App() {
   const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState<boolean>(false);
 
-  // Self-referencing canonical for whatever URL is currently shown
+  // Per-section title, description and self-referencing canonical
   useEffect(() => {
-    syncCanonical();
+    if (watchingMovieId) {
+      syncCanonical();
+      return;
+    }
+    if (canonicalTab(activeTab) === 'eurofilm-blog') return; // blog view sets its own meta
+    const section = sectionForTab(activeTab) || SECTION_ROUTES[0];
+    setPageMeta(section.title, section.description);
   }, [activeTab, watchingMovieId]);
 
   // Sync URL on history change (back / forward browser buttons)
@@ -159,6 +200,7 @@ export default function App() {
       const params = new URLSearchParams(window.location.search);
       const watchParam = params.get('watch');
       setWatchingMovieId(watchParam ? parseInt(watchParam, 10) : null);
+      setActiveTab(tabFromLocation());
       syncCanonical();
     };
     window.addEventListener('popstate', handlePopState);
@@ -222,7 +264,7 @@ export default function App() {
           return;
         }
 
-        // Branch 1: ANIME (Jikan API v4 + Curated Anime with Souryo to Majiwaru Shikiyoku, The Simpsons, etc.)
+        // Branch 1: ANIME (Jikan API v4 sfw + curated anime)
         if (tab === 'anime' || mediaTypeFilter === 'anime') {
           const list = await fetchTopAnime(page);
           const filtered = query.trim()
@@ -462,8 +504,7 @@ export default function App() {
       setWatchingMovieId(null);
       setWatchingMovieInitial(null);
     }
-    const tabPath = window.location.pathname === '/' ? '/free-movie-stream' : window.location.pathname;
-    window.history.pushState({ tab }, '', tab === 'popular' ? tabPath : `${tabPath}?tab=${tab}`);
+    window.history.pushState({ tab }, '', urlForTab(tab));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -735,6 +776,7 @@ export default function App() {
                     alt={featuredMovie.title}
                     className="w-full h-full object-cover object-center brightness-105 contrast-105 transition-opacity duration-700"
                     loading="eager"
+                    fetchPriority="high"
                     decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/30 to-transparent" />
@@ -760,9 +802,9 @@ export default function App() {
                       </div>
                     </div>
 
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight drop-shadow-sm">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight drop-shadow-sm">
                       {featuredMovie.title}
-                    </h1>
+                    </h2>
 
                     <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-zinc-200 font-medium">
                       <span className="flex items-center gap-1 bg-amber-500/25 text-amber-300 px-2.5 py-1 rounded border border-amber-500/40">
@@ -866,6 +908,16 @@ export default function App() {
 
             {/* Main Content Area */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-12">
+              {!pageHasOwnH1(activeTab) && (
+                <header className="space-y-2">
+                  <h1 className="text-2xl sm:text-3xl font-black text-zinc-950 tracking-tight">
+                    {searchQuery ? `Search results for “${searchQuery}”` : (sectionForTab(activeTab) || SECTION_ROUTES[0]).h1}
+                  </h1>
+                  {!searchQuery && (
+                    <p className="text-sm text-zinc-600 max-w-3xl">{(sectionForTab(activeTab) || SECTION_ROUTES[0]).intro}</p>
+                  )}
+                </header>
+              )}
               {/* Top Global Sponsored Ad Banner */}
               <AdBanner
                 variant="leaderboard"
@@ -873,7 +925,7 @@ export default function App() {
                 subtitle="Instant access to trending new releases, box office movies & TV series"
               />
 
-              {/* SPECIAL TAB 1: ANIME (Jikan API v4 + Curated with Souryo to Majiwaru Shikiyoku and The Simpsons) */}
+              {/* SPECIAL TAB 1: ANIME (Jikan API v4, safe-for-work only, plus curated titles) */}
               {activeTab === 'anime' || mediaTypeFilter === 'anime' ? (
                 <AnimeCatalogView
                   animeList={displayedAnime}

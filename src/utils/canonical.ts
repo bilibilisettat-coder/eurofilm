@@ -1,21 +1,21 @@
-// Keeps <link rel="canonical"> and og:url pointing at the URL actually being shown.
-// Only one meaningful query param is kept (blog > watch > tab) so every sitemap URL
-// declares itself as canonical instead of pointing everything at /free-movie-stream.
-const SITE = 'https://eurofilm.xyz';
-const KEPT_PARAMS = ['blog', 'watch', 'tab'] as const;
+import { SITE_URL, blogSlugFromPath, blogPath, sectionForPath } from '../data/routes';
 
+// Canonical rules:
+//  - /blog/<slug> and the clean section paths are canonical to themselves
+//  - ?watch=<id> trailer pages are canonical to themselves
+//  - anything else (non-indexed tab aliases like /?tab=born-today) points at the home page
 export function getCanonicalUrl(): string {
-  if (typeof window === 'undefined') return `${SITE}/`;
-  const params = new URLSearchParams(window.location.search);
-  let path = window.location.pathname.replace(/\/index\.html$/, '/') || '/';
-  if (path.length > 1) path = path.replace(/\/+$/, '');
-  for (const key of KEPT_PARAMS) {
-    const value = params.get(key);
-    if (value && !(key === 'tab' && value === 'popular')) {
-      return `${SITE}${path}?${key}=${encodeURIComponent(value)}`;
-    }
+  if (typeof window === 'undefined') return `${SITE_URL}/`;
+  const { pathname, search } = window.location;
+  const watch = new URLSearchParams(search).get('watch');
+  if (watch && /^\d+$/.test(watch)) {
+    const base = sectionForPath(pathname)?.path ?? '/';
+    return `${SITE_URL}${base}?watch=${watch}`;
   }
-  return `${SITE}${path}`;
+  const slug = blogSlugFromPath(pathname);
+  if (slug) return `${SITE_URL}${blogPath(slug)}`;
+  const section = sectionForPath(pathname);
+  return `${SITE_URL}${section ? section.path : '/'}`;
 }
 
 export function syncCanonical(): void {
@@ -29,4 +29,17 @@ export function syncCanonical(): void {
   }
   link.href = href;
   document.querySelector("meta[property='og:url']")?.setAttribute('content', href);
+}
+
+/** Sets title + description + social tags in one place. */
+export function setPageMeta(title: string, description: string): void {
+  if (typeof document === 'undefined') return;
+  document.title = title;
+  const set = (sel: string, value: string) => document.querySelector(sel)?.setAttribute('content', value);
+  set("meta[name='description']", description);
+  set("meta[property='og:title']", title);
+  set("meta[property='og:description']", description);
+  set("meta[name='twitter:title']", title);
+  set("meta[name='twitter:description']", description);
+  syncCanonical();
 }

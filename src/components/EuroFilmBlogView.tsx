@@ -22,7 +22,8 @@ import {
 import { Language, TRANSLATIONS } from '../i18n/translations';
 import { getUiStrings } from '../i18n/localize';
 import { AdBanner } from './AdBanner';
-import { syncCanonical } from '../utils/canonical';
+import { setPageMeta } from '../utils/canonical';
+import { BLOG_BASE, blogPath, blogSeoTitle, blogSlugFromPath, sectionForTab } from '../data/routes';
 
 interface EuroFilmBlogViewProps {
   onBackToHome?: () => void;
@@ -56,23 +57,18 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
     : BLOG_POSTS.filter((p) => p.tags.some((tg) => tg.toLowerCase().includes(activeTag.toLowerCase())));
 
   const applyArticleMeta = (post: BlogPost | null) => {
-    const title = post ? `${post.title} | EuroFilm` : 'EuroFilm Blog | Film Reviews & Critical Essays';
-    const desc = post ? post.excerpt : 'In-depth film reviews and critical essays from EuroFilm.';
-    document.title = title;
-    document.querySelector("meta[name='description']")?.setAttribute('content', desc);
-    document.querySelector("meta[property='og:title']")?.setAttribute('content', title);
-    document.querySelector("meta[property='og:description']")?.setAttribute('content', desc);
-    syncCanonical();
+    if (post) {
+      setPageMeta(blogSeoTitle(post.title), post.excerpt);
+    } else {
+      const section = sectionForTab('eurofilm-blog')!;
+      setPageMeta(section.title, section.description);
+    }
   };
 
-  // Open the article named in ?blog=slug on first load (sitemap / shared links)
+  // Open the article at /blog/<slug> on first load (sitemap / shared links)
   useEffect(() => {
-    const slug = new URLSearchParams(window.location.search).get('blog');
-    if (!slug) {
-      applyArticleMeta(null);
-      return;
-    }
-    const post = BLOG_POSTS.find((p) => p.slug === slug);
+    const slug = blogSlugFromPath(window.location.pathname);
+    const post = slug ? BLOG_POSTS.find((p) => p.slug === slug) : undefined;
     if (post) openArticle(post, false);
     else applyArticleMeta(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,7 +76,7 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
 
   const closeArticle = () => {
     setSelectedPost(null);
-    window.history.pushState({}, '', `${window.location.pathname}?tab=eurofilm-blog`);
+    window.history.pushState({}, '', BLOG_BASE);
     applyArticleMeta(null);
   };
 
@@ -88,7 +84,7 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
 
   const openArticle = (post: BlogPost, pushUrl: boolean) => {
     if (pushUrl) {
-      window.history.pushState({ blog: post.slug }, '', `${window.location.pathname}?blog=${post.slug}`);
+      window.history.pushState({ blog: post.slug }, '', blogPath(post.slug));
     }
     applyArticleMeta(post);
     setSelectedPost(post);
@@ -254,10 +250,10 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
         <section className="p-6 bg-white border border-zinc-200 rounded-xl shadow-xs space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-100 pb-3">
             <div>
-              <h3 className="text-base font-bold text-zinc-950 flex items-center gap-2">
+              <h2 className="text-base font-bold text-zinc-950 flex items-center gap-2">
                 <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
                 {t.rateReview || 'Rate This Article'}
-              </h3>
+              </h2>
               <p className="text-xs text-zinc-500">
                 Share your reader rating for this critical analysis.
               </p>
@@ -303,9 +299,9 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
         <section className="p-6 bg-white border border-zinc-200 rounded-xl shadow-xs space-y-6">
           <div className="flex items-center gap-2 border-b border-zinc-100 pb-3">
             <MessageSquare className="w-5 h-5 text-indigo-600" />
-            <h3 className="text-base font-bold text-zinc-950">
+            <h2 className="text-base font-bold text-zinc-950">
               {t.communityDiscussion || 'Community Discussion'} ({commentsList.length})
-            </h3>
+            </h2>
           </div>
 
           {/* New Comment Form */}

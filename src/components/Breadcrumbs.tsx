@@ -37,7 +37,7 @@ export function Breadcrumbs({ items, onNavigateHome, currentLanguage = 'en' }: B
         >
           <a
             itemProp="item"
-            href="/free-movie-stream"
+            href="/"
             onClick={(e) => {
               if (onNavigateHome) {
                 e.preventDefault();

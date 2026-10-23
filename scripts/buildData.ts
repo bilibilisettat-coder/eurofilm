@@ -152,7 +152,19 @@ const LIST_SOURCES: Record<string, () => Promise<ListItem[]>> = {
   top_rated: () => tmdbList('/movie/top_rated', 'movie'),
   tv_shows: () => tmdbList('/tv/popular', 'tv'),
   indian_movies: () => tmdbList('/discover/movie?with_original_language=hi&sort_by=popularity.desc&include_adult=false', 'movie'),
-  anime: jikanTopAnime,
+  // Jikan rate-limits shared build IPs: retry once, then fall back to TMDB Japanese animation.
+  anime: async () => {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const list = await jikanTopAnime();
+        if (list.length) return list;
+      } catch (e) {
+        console.warn(`buildData: jikan attempt ${attempt + 1} failed: ${e}`);
+      }
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+    return tmdbList('/discover/tv?with_genres=16&with_original_language=ja&sort_by=vote_count.desc', 'tv');
+  },
 };
 
 export async function loadBuildData(): Promise<BuildData> {

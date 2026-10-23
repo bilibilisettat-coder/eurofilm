@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Fallback until the Cloudflare www -> root redirect is active: send www visitors (and Google) to the canonical host.
+      if (location.hostname === 'www.eurofilm.xyz') location.replace('https://eurofilm.xyz' + location.pathname + location.search + location.hash);
+    </script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BC27NEFEGM"></script>

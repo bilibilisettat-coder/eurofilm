@@ -44,21 +44,21 @@ export const AdBanner: React.FC<AdBannerProps> = ({
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <p className="text-sm sm:text-base font-bold text-white group-hover:text-amber-400 transition-colors">
-                    {title || 'High-Speed 4K Stream Mirror (Sponsored Partner)'}
+                    {title || 'Sponsored'}
                   </p>
                   <span className="hidden sm:inline-flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
                     <ShieldCheck className="w-3.5 h-3.5" /> Ultra HD Fast Load
                   </span>
                 </div>
                 <p className="text-xs text-zinc-300">
-                  {subtitle || 'Instant bufferless streaming server with unlimited cinema releases and 1080p/4K bitrate.'}
+                  {subtitle || 'Advertisement from our ad partner'}
                 </p>
               </div>
             </div>
 
             <div className="w-full sm:w-auto shrink-0 flex items-center justify-end">
               <span className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-black text-xs sm:text-sm shadow-md transition-all group-hover:translate-x-0.5">
-                <span>Play Full Stream</span>
+                <span>Visit sponsor</span>
                 <ExternalLink className="w-4 h-4" />
               </span>
             </div>
@@ -86,10 +86,10 @@ export const AdBanner: React.FC<AdBannerProps> = ({
               <Tv className="w-7 h-7" />
             </div>
             <span className="text-white font-bold text-sm sm:text-base leading-tight">
-              {title || 'Unlimited Movie & TV Access'}
+              {title || 'Sponsored'}
             </span>
             <span className="text-xs text-amber-300/80 mt-1">
-              {subtitle || 'Zero Buffering • 4K Quality'}
+              {subtitle || 'Advertisement'}
             </span>
           </div>
 
@@ -125,11 +125,11 @@ export const AdBanner: React.FC<AdBannerProps> = ({
                 AD SPONSOR
               </span>
               <p className="text-sm sm:text-base font-bold text-white hover:text-amber-300 transition-colors">
-                {title || 'Exclusive Cinema Streaming & High-Speed Media Access'}
+                {title || 'Sponsored'}
               </p>
             </div>
             <p className="text-xs text-zinc-300">
-              {subtitle || 'Support EuroFilm editorial by checking out our verified streaming and digital partner offer.'}
+              {subtitle || 'Advertisements help keep EuroFilm free.'}
             </p>
           </div>
           <span className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-bold text-xs shadow-xs transition-colors">
@@ -156,7 +156,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({
               AD
             </span>
             <span className="font-semibold truncate">
-              {title || 'Sponsored: Ultra HD Cinema & Streaming Server'}
+              {title || 'Sponsored'}
             </span>
           </div>
           <span className="shrink-0 font-bold text-amber-700 flex items-center gap-1 text-[11px]">
@@ -185,16 +185,16 @@ export const AdBanner: React.FC<AdBannerProps> = ({
             <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
               <span className="font-bold text-xs sm:text-sm text-white group-hover:text-amber-300 transition-colors flex items-center justify-center sm:justify-start gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                {title || 'Exclusive Streaming Offer: Fast 4K Cinema & Unlimited Releases'}
+                {title || 'Sponsored'}
               </span>
               <span className="hidden md:inline text-xs text-zinc-300">
-                {subtitle || 'Click to access our verified media partner'}
+                {subtitle || 'Advertisement from our ad partner'}
               </span>
             </div>
           </div>
 
           <span className="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 text-xs font-black shadow-xs transition-colors">
-            <span>Explore Now</span>
+            <span>Visit sponsor</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </span>
         </div>

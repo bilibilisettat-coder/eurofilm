@@ -108,8 +108,8 @@ export function AnimeCatalogView({
 
       <AdBanner
         variant="leaderboard"
-        title="Sponsored Anime & Cartoon Stream Server"
-        subtitle="Watch full episodes, high-resolution anime movies and releases"
+        title="Sponsored"
+        subtitle="Advertisement from our ad partner"
       />
 
       {/* 4 in every horizontal line on desktop */}
@@ -299,8 +299,8 @@ export function TVShowsCatalogView({
 
       <AdBanner
         variant="leaderboard"
-        title="Sponsored TV Broadcast Partner"
-        subtitle="Watch full TV episodes, daily monologues, and reality specials"
+        title="Sponsored"
+        subtitle="Advertisement from our ad partner"
       />
 
       {/* 4 in every horizontal line on desktop */}

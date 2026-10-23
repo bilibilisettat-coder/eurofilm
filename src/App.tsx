@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ALL_RAW_KEYWORDS } from './data/keywords';
 import { setPageMeta, syncCanonical } from './utils/canonical';
+import { LEGACY_BLOG_SLUGS } from './data/blogData';
 import {
   SECTION_ROUTES,
   blogPath,
@@ -34,7 +35,7 @@ function resolveInitialTab(): string {
   const params = new URLSearchParams(window.location.search);
   const legacyBlog = params.get('blog');
   if (legacyBlog && /^[a-z0-9-]+$/.test(legacyBlog)) {
-    window.history.replaceState({}, '', blogPath(legacyBlog));
+    window.history.replaceState({}, '', blogPath(LEGACY_BLOG_SLUGS[legacyBlog] || legacyBlog));
     return 'eurofilm-blog';
   }
   const legacyTab = params.get('tab');
@@ -921,8 +922,8 @@ export default function App() {
               {/* Top Global Sponsored Ad Banner */}
               <AdBanner
                 variant="leaderboard"
-                title="⚡ Sponsored Cinema Partner: High-Speed Bufferless 4K Streaming Access"
-                subtitle="Instant access to trending new releases, box office movies & TV series"
+                title="Sponsored"
+                subtitle="Advertisement from our ad partner"
               />
 
               {/* SPECIAL TAB 1: ANIME (Jikan API v4, safe-for-work only, plus curated titles) */}
@@ -1268,8 +1269,8 @@ export default function App() {
                                 <div className="col-span-1 sm:col-span-2 lg:col-span-4 my-2">
                                   <AdBanner
                                     variant="in-feed"
-                                    title="Sponsored Cinema Streaming"
-                                    subtitle="Ultra HD 4K Quality • Bufferless Playback"
+                                    title="Sponsored"
+                                    subtitle="Advertisement from our ad partner"
                                   />
                                 </div>
                               )}
@@ -1288,8 +1289,8 @@ export default function App() {
                       <AdBanner
                         variant="leaderboard"
                         className="my-6"
-                        title="Watch Full Movies &amp; Series Online (Sponsored Mirror)"
-                        subtitle="Zero buffering • Unlimited releases &amp; instant access"
+                        title="Sponsored"
+                        subtitle="Advertisement from our ad partner"
                       />
 
                       {/* Pagination Controls */}

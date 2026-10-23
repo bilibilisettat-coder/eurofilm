@@ -351,11 +351,11 @@ export function MovieWatchPage({
               )}
             </div>
 
-            {/* Sponsored Ultra HD Stream Mirror */}
+            {/* Sponsored ad slot */}
             <AdBanner
               variant="player-mirror"
-              title={`Play ${displayMovie.title} - Ultra HD Stream Mirror`}
-              subtitle="Sponsored fast streaming partner • Bufferless 4K bitrate • Instant access"
+              title="Sponsored"
+              subtitle="Advertisement from our ad partner"
             />
 
             {/* TRAILER INTERACTIONS BAR: Star Rating + Emoji Reactions + Share Button */}
@@ -629,7 +629,7 @@ export function MovieWatchPage({
                   <div className="pt-3 border-t border-zinc-200">
                     <AdBanner
                       variant="compact"
-                      title="Sponsor: Fast 4K Movie Streaming Access"
+                      title="Sponsored"
                     />
                   </div>
                 </div>
@@ -702,8 +702,8 @@ export function MovieWatchPage({
             {/* Sponsored Leaderboard Ad */}
             <AdBanner
               variant="leaderboard"
-              title={`Watch ${displayMovie.title} & New Cinema Releases in HD`}
-              subtitle="Official streaming partner offer • Unlimited movies & series"
+              title="Sponsored"
+              subtitle="Advertisement from our ad partner"
             />
 
             {/* Related / Recommended Movies */}
@@ -713,7 +713,7 @@ export function MovieWatchPage({
                   <h2 className="text-lg font-bold text-zinc-950 tracking-tight">
                     {ui.moreTrailersYouMayLike}
                   </h2>
-                  <span className="text-xs text-zinc-400">{ui.streamOnEurofilm}</span>
+                  <span className="text-xs text-zinc-400">Sponsored</span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">

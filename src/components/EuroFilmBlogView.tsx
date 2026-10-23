@@ -190,61 +190,84 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
           <img
             src={selectedPost.coverImage}
             alt={selectedPost.title}
-            loading="lazy"
+            width={800}
+            height={450}
+            loading="eager"
             decoding="async"
             className="w-full h-full object-cover"
           />
         </div>
 
+        {/* Quick facts */}
+        {selectedPost.facts?.length > 0 && (
+          <section aria-label="Quick facts" className="border border-zinc-200 rounded-xl overflow-hidden">
+            <h2 className="text-sm font-bold text-zinc-950 bg-zinc-50 px-4 py-2 border-b border-zinc-200">Quick facts</h2>
+            <dl className="divide-y divide-zinc-100 text-sm">
+              {selectedPost.facts.map((f) => (
+                <div key={f.label} className="grid grid-cols-3 gap-3 px-4 py-2">
+                  <dt className="font-semibold text-zinc-600">{f.label}</dt>
+                  <dd className="col-span-2 text-zinc-900">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+
         {/* Article Body */}
         <article className="prose prose-zinc max-w-none text-zinc-850 space-y-5 text-sm sm:text-base leading-relaxed sm:leading-loose">
           {selectedPost.content.map((paragraph, idx) => (
             <React.Fragment key={idx}>
-              <p
-                className="font-normal text-zinc-800 leading-relaxed text-base"
-                dangerouslySetInnerHTML={{ __html: paragraph }}
-              />
-              {idx === 2 && (
-                <AdBanner
-                  variant="inline"
-                  title="Sponsored Cinema Partner: Stream 4K Movies Instantly"
-                  subtitle="Support EuroFilm independent film criticism and access ultra-fast high bitrate streaming."
+              {paragraph.startsWith('## ') ? (
+                <h2 className="text-xl sm:text-2xl font-black text-zinc-950 tracking-tight pt-4">{paragraph.slice(3)}</h2>
+              ) : (
+                <p
+                  className="font-normal text-zinc-800 leading-relaxed text-base [&_a]:text-amber-700 [&_a]:underline [&_a]:font-semibold"
+                  dangerouslySetInnerHTML={{ __html: paragraph }}
                 />
               )}
-              {idx === 6 && (
+              {idx === 3 && (
+                <AdBanner
+                  variant="inline"
+                  title="Sponsored"
+                  subtitle="Advertisement from our ad partner"
+                />
+              )}
+              {idx === 9 && (
                 <AdBanner
                   variant="leaderboard"
-                  title="Official Streaming Sponsor: Watch Latest Premieres & Box Office Hits"
-                  subtitle="Instant access to verified high-definition media partner servers."
+                  title="Sponsored"
+                  subtitle="Advertisement from our ad partner"
                 />
               )}
             </React.Fragment>
           ))}
         </article>
 
+        {/* Sources */}
+        {selectedPost.sources?.length > 0 && (
+          <section className="text-sm space-y-2">
+            <h2 className="text-base font-bold text-zinc-950">Sources</h2>
+            <ul className="list-disc pl-5 space-y-1">
+              {selectedPost.sources.map((src) => (
+                <li key={src.url}>
+                  <a href={src.url} target="_blank" rel="noopener noreferrer" className="text-amber-700 underline">
+                    {src.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-zinc-500">
+              Facts checked {selectedPost.updated || selectedPost.date}. Verdict score reflects the critical and audience consensus.
+            </p>
+          </section>
+        )}
+
         <AdBanner
           variant="player-mirror"
           className="my-8"
-          title="Sponsored Streaming Partner: Watch Full Releases Online"
-          subtitle="Bufferless ultra HD streaming server with verified safe playback."
+          title="Sponsored"
+          subtitle="Advertisement from our ad partner"
         />
-
-        {/* SEO Keywords Cluster */}
-        <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-2">
-          <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider block">
-            Keywords &amp; Related Tags:
-          </span>
-          <div className="flex flex-wrap gap-1.5">
-            {selectedPost.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-[11px] font-medium bg-white px-2 py-0.5 rounded border border-zinc-200 text-zinc-700"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-        </div>
 
         {/* USER RATING */}
         <section className="p-6 bg-white border border-zinc-200 rounded-xl shadow-xs space-y-4">
@@ -255,7 +278,7 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
                 {t.rateReview || 'Rate This Article'}
               </h2>
               <p className="text-xs text-zinc-500">
-                Share your reader rating for this critical analysis.
+                Share your rating for this film guide.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -397,8 +420,8 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
 
       <AdBanner
         variant="leaderboard"
-        title="Sponsored Streaming Partner: Watch Full HD Releases & Trailers Online"
-        subtitle="Exclusive partner access for EuroFilm readers • Zero buffering"
+        title="Sponsored"
+        subtitle="Advertisement from our ad partner"
       />
 
       {/* Grid of Blog Posts */}
@@ -408,8 +431,8 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
             {index === 2 && (
               <AdBanner
                 variant="in-feed"
-                title="Watch Full HD Movies Online"
-                subtitle="Exclusive Sponsor Streaming Access"
+                title="Sponsored"
+                subtitle="Advertisement from our ad partner"
               />
             )}
             <article

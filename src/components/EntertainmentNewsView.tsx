@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { generateEntertainmentNewsCatalog, NewsArticleItem } from '../data/newsCatalog';
+import type { NewsArticleItem } from '../data/newsCatalog';
+import { loadNews, timeAgo } from '../services/newsFeed';
 import { fetchLiveMovieNews } from '../services/externalApis';
 import {
   Newspaper,
@@ -26,40 +27,48 @@ export function EntertainmentNewsView({
   const t = TRANSLATIONS[currentLanguage] || TRANSLATIONS.en;
   const ui = getUiStrings(currentLanguage);
 
-  const [allNews, setAllNews] = useState<NewsArticleItem[]>(() => generateEntertainmentNewsCatalog());
+  const [allNews, setAllNews] = useState<NewsArticleItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [jumpPageInput, setJumpPageInput] = useState<string>('1');
   const [, setLoadingLive] = useState<boolean>(false);
 
-  // Fetch live RSS news and merge at top
+  // Real headlines: build-time feed (/news.json), falling back to the live Deadline feed.
   useEffect(() => {
     let isMounted = true;
     setLoadingLive(true);
-    fetchLiveMovieNews()
-      .then((liveItems) => {
-        if (!isMounted || !liveItems || liveItems.length === 0) return;
-        const converted: NewsArticleItem[] = liveItems.map((item, index) => ({
-          id: `live-rss-${index}-${Date.now()}`,
+    loadNews()
+      .then(async (feed) => {
+        if (feed.length) {
+          return feed.map<NewsArticleItem>((item, index) => ({
+            id: `news-${index}`,
+            title: item.title,
+            summary: '',
+            source: item.source,
+            timeAgo: timeAgo(item.date),
+            imageUrl: '',
+            category: item.category === 'Reviews' ? 'Film News' : item.category,
+            link: item.link,
+          }));
+        }
+        const live = await fetchLiveMovieNews();
+        return live.map<NewsArticleItem>((item, index) => ({
+          id: `live-${index}`,
           title: item.title,
-          summary: item.summary,
-          source: item.source || 'Live RSS Feed',
-          timeAgo: item.pubDate || 'Just now',
-          imageUrl: item.imageUrl,
+          summary: '',
+          source: item.source || 'Deadline',
+          timeAgo: item.pubDate || '',
+          imageUrl: '',
           category: 'Film News',
           link: item.link,
         }));
-
-        setAllNews((prev) => {
-          return [...converted, ...prev];
-        });
       })
-      .catch((err) => console.warn('Could not fetch live RSS news:', err))
+      .then((items) => isMounted && setAllNews(items))
+      .catch((err) => console.warn('Could not load news:', err))
       .finally(() => {
         if (isMounted) setLoadingLive(false);
       });
-
     return () => {
       isMounted = false;
     };
@@ -203,17 +212,11 @@ export function EntertainmentNewsView({
             key={article.id}
             className="p-4 sm:p-5 bg-white border border-zinc-200 rounded-xl shadow-2xs hover:border-zinc-400 transition-colors flex flex-col sm:flex-row gap-4 sm:gap-5"
           >
-            <div className="w-full sm:w-44 md:w-52 h-40 sm:h-32 rounded-lg overflow-hidden bg-zinc-100 shrink-0 relative">
-              <img
-                src={article.imageUrl}
-                alt={article.title}
-                loading="lazy"
-                className="w-full h-full object-cover"
-              />
-              <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-950/80 text-white backdrop-blur-xs font-mono">
-                {article.category}
-              </span>
-            </div>
+            {article.imageUrl && (
+              <div className="w-full sm:w-44 md:w-52 h-40 sm:h-32 rounded-lg overflow-hidden bg-zinc-100 shrink-0">
+                <img src={article.imageUrl} alt={article.title} loading="lazy" className="w-full h-full object-cover" />
+              </div>
+            )}
 
             <div className="flex-1 flex flex-col justify-between space-y-2">
               <div>
@@ -230,12 +233,20 @@ export function EntertainmentNewsView({
                 </div>
 
                 <h2 className="font-bold text-sm sm:text-base text-zinc-950 leading-snug">
-                  {article.title}
+                  {article.link ? (
+                    <a href={article.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                      {article.title}
+                    </a>
+                  ) : (
+                    article.title
+                  )}
                 </h2>
-
-                <p className="text-xs text-zinc-600 line-clamp-2 mt-1.5 leading-relaxed">
-                  {article.summary}
-                </p>
+                <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-100 text-zinc-700 font-mono">
+                  {article.category}
+                </span>
+                {article.summary && (
+                  <p className="text-xs text-zinc-600 line-clamp-2 mt-1.5 leading-relaxed">{article.summary}</p>
+                )}
               </div>
 
               <div className="pt-2 flex items-center justify-between border-t border-zinc-100">

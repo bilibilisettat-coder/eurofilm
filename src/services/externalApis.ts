@@ -851,32 +851,5 @@ const FALLBACK_INDIAN_MOVIES: Movie[] = [
   },
 ];
 
-const FALLBACK_RSS_NEWS: ExternalNewsArticle[] = [
-  {
-    id: 'rss-1',
-    title: 'Christopher Nolan Sets Next Mystery Epic at Universal for IMAX 2026',
-    summary: 'Universal confirms July 2026 release with Matt Damon in advanced talks.',
-    pubDate: 'Today',
-    link: 'https://deadline.com',
-    source: 'Deadline Hollywood',
-    imageUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500',
-  },
-  {
-    id: 'rss-2',
-    title: 'Spider-Man 4 Officially Sets Summer 2026 Release Date',
-    summary: 'Tom Holland returns under director Destin Daniel Cretton following Avengers: Doomsday.',
-    pubDate: 'Yesterday',
-    link: 'https://deadline.com',
-    source: 'Variety Cinema',
-    imageUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500',
-  },
-  {
-    id: 'rss-3',
-    title: 'Demon Slayer: Infinity Castle Trilogy Confirms Global Sony Theatrical Distribution',
-    summary: 'The historic anime franchise will conclude with three feature-length theatrical releases.',
-    pubDate: '2 days ago',
-    link: 'https://deadline.com',
-    source: 'Anime News Network',
-    imageUrl: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=500',
-  },
-];
+// No invented fallback headlines: if the live feed fails, show nothing.
+const FALLBACK_RSS_NEWS: ExternalNewsArticle[] = [];

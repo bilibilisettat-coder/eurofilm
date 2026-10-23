@@ -30,7 +30,7 @@ export const StickyAdBar: React.FC = () => {
           <div className="flex-1 min-w-0 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-400 shrink-0 hidden sm:block" />
             <p className="text-xs sm:text-sm font-bold text-white group-hover:text-amber-300 transition-colors truncate">
-              ⚡ Stream High-Definition Releases &amp; Exclusive Cinema Deals — Instant Ad Access
+              Sponsored · Advertisement
             </p>
           </div>
 

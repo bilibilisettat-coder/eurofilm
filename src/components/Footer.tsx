@@ -230,6 +230,14 @@ export function Footer({
           </div>
         </nav>
 
+        <p className="text-[11px] text-zinc-400 mb-4">
+          Movie and TV data and images from{' '}
+          <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer" className="underline">TMDB</a>. This product uses
+          the TMDB API but is not endorsed or certified by TMDB. Anime data from{' '}
+          <a href="https://jikan.moe/" target="_blank" rel="noopener noreferrer" className="underline">Jikan</a> (MyAnimeList). News
+          headlines link to their original publishers.
+        </p>
+
         {/* Bottom copyright line */}
         <div className="pt-6 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-400">
           <div>

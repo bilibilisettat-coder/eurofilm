@@ -156,8 +156,8 @@ export function EuroFilmDislikedLabsView({
 
       <AdBanner
         variant="leaderboard"
-        title="Sponsored Cinema Partner: Stream Full Movies & Uncut Releases Online"
-        subtitle="Zero buffering • Complete trailer mirrors and uncut premieres"
+        title="Sponsored"
+        subtitle="Advertisement from our ad partner"
       />
 
       {/* Grid of Disliked Movies */}

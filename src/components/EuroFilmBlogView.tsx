@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BLOG_POSTS, BlogPost } from '../data/blogData';
 import {
   getBlogPostRating,
@@ -22,6 +22,7 @@ import {
 import { Language, TRANSLATIONS } from '../i18n/translations';
 import { getUiStrings } from '../i18n/localize';
 import { AdBanner } from './AdBanner';
+import { syncCanonical } from '../utils/canonical';
 
 interface EuroFilmBlogViewProps {
   onBackToHome?: () => void;
@@ -54,7 +55,42 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
     ? BLOG_POSTS
     : BLOG_POSTS.filter((p) => p.tags.some((tg) => tg.toLowerCase().includes(activeTag.toLowerCase())));
 
-  const handleOpenArticle = (post: BlogPost) => {
+  const applyArticleMeta = (post: BlogPost | null) => {
+    const title = post ? `${post.title} | EuroFilm` : 'EuroFilm Blog | Film Reviews & Critical Essays';
+    const desc = post ? post.excerpt : 'In-depth film reviews and critical essays from EuroFilm.';
+    document.title = title;
+    document.querySelector("meta[name='description']")?.setAttribute('content', desc);
+    document.querySelector("meta[property='og:title']")?.setAttribute('content', title);
+    document.querySelector("meta[property='og:description']")?.setAttribute('content', desc);
+    syncCanonical();
+  };
+
+  // Open the article named in ?blog=slug on first load (sitemap / shared links)
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get('blog');
+    if (!slug) {
+      applyArticleMeta(null);
+      return;
+    }
+    const post = BLOG_POSTS.find((p) => p.slug === slug);
+    if (post) openArticle(post, false);
+    else applyArticleMeta(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const closeArticle = () => {
+    setSelectedPost(null);
+    window.history.pushState({}, '', `${window.location.pathname}?tab=eurofilm-blog`);
+    applyArticleMeta(null);
+  };
+
+  const handleOpenArticle = (post: BlogPost) => openArticle(post, true);
+
+  const openArticle = (post: BlogPost, pushUrl: boolean) => {
+    if (pushUrl) {
+      window.history.pushState({ blog: post.slug }, '', `${window.location.pathname}?blog=${post.slug}`);
+    }
+    applyArticleMeta(post);
     setSelectedPost(post);
     const stats = getBlogPostRating(post.id, post.verdictScore);
     setRatingStats(stats);
@@ -94,7 +130,7 @@ export function EuroFilmBlogView({ onBackToHome, currentLanguage = 'en' }: EuroF
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-200">
         <div className="flex items-center justify-between border-b border-zinc-200 pb-4">
           <button
-            onClick={() => setSelectedPost(null)}
+            onClick={closeArticle}
             className="flex items-center gap-2 text-xs font-semibold text-zinc-700 hover:text-black py-1.5 px-3 rounded-md hover:bg-zinc-100 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ALL_RAW_KEYWORDS } from './data/keywords';
+import { syncCanonical } from './utils/canonical';
 import {
   Movie,
   Genre,
@@ -96,6 +97,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<string>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
+      if (params.get('blog')) return 'eurofilm-blog';
       const tabParam = params.get('tab');
       if (tabParam) return tabParam;
       const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
@@ -146,12 +148,18 @@ export default function App() {
   const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState<boolean>(false);
 
+  // Self-referencing canonical for whatever URL is currently shown
+  useEffect(() => {
+    syncCanonical();
+  }, [activeTab, watchingMovieId]);
+
   // Sync URL on history change (back / forward browser buttons)
   useEffect(() => {
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
       const watchParam = params.get('watch');
       setWatchingMovieId(watchParam ? parseInt(watchParam, 10) : null);
+      syncCanonical();
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -451,8 +459,11 @@ export default function App() {
     setSelectedGenre(null);
     setSortBy('popularity.desc');
     if (watchingMovieId) {
-      handleCloseWatchPage();
+      setWatchingMovieId(null);
+      setWatchingMovieInitial(null);
     }
+    const tabPath = window.location.pathname === '/' ? '/free-movie-stream' : window.location.pathname;
+    window.history.pushState({ tab }, '', tab === 'popular' ? tabPath : `${tabPath}?tab=${tab}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

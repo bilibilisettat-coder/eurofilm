@@ -3,6 +3,8 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "eurofilm",
   "main": "src/worker.ts",
+  // Needed by `wrangler preview` (the Workers Builds branch deploy command).
+  "previews": {},
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist",

@@ -15,3 +15,9 @@
 /news.json
   Content-Type: application/json; charset=utf-8
   Cache-Control: public, max-age=900
+
+/_movies.json
+  X-Robots-Tag: noindex
+
+/_shell.html
+  X-Robots-Tag: noindex

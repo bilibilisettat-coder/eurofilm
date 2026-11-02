@@ -1,12 +1,16 @@
 import { SITE_URL, blogSlugFromPath, blogPath, sectionForPath } from '../data/routes';
+import { parseMoviePath } from '../seo/movieSeo';
 
 // Canonical rules:
 //  - /blog/<slug> and the clean section paths are canonical to themselves
-//  - ?watch=<id> trailer pages are canonical to themselves
+//  - /movie/<slug>-<id> trailer pages are canonical to themselves (old ?watch=<id> URLs are 301ed there by the Worker)
 //  - anything else (non-indexed tab aliases like /?tab=born-today) points at the home page
 export function getCanonicalUrl(): string {
   if (typeof window === 'undefined') return `${SITE_URL}/`;
   const { pathname, search } = window.location;
+  const movie = parseMoviePath(pathname);
+  if (movie) return `${SITE_URL}/movie/${movie.slug}`;
+  // anime and TV trailers use ids that are not TMDB movie ids; they keep ?watch= and are not indexed
   const watch = new URLSearchParams(search).get('watch');
   if (watch && /^\d+$/.test(watch)) {
     const base = sectionForPath(pathname)?.path ?? '/';

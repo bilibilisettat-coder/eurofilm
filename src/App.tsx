@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ALL_RAW_KEYWORDS } from './data/keywords';
 import { setPageMeta, syncCanonical } from './utils/canonical';
+import { moviePath, parseMoviePath } from './seo/movieSeo';
 import { LEGACY_BLOG_SLUGS } from './data/blogData';
 import {
   SECTION_ROUTES,
@@ -170,6 +171,8 @@ export default function App() {
   // Dedicated full-page trailer watch state
   const [watchingMovieId, setWatchingMovieId] = useState<number | null>(() => {
     try {
+      const moviePath = parseMoviePath(window.location.pathname);
+      if (moviePath) return moviePath.id;
       const params = new URLSearchParams(window.location.search);
       const watchParam = params.get('watch');
       return watchParam ? parseInt(watchParam, 10) : null;
@@ -200,7 +203,7 @@ export default function App() {
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
       const watchParam = params.get('watch');
-      setWatchingMovieId(watchParam ? parseInt(watchParam, 10) : null);
+      setWatchingMovieId(parseMoviePath(window.location.pathname)?.id ?? (watchParam ? parseInt(watchParam, 10) : null));
       setActiveTab(tabFromLocation());
       syncCanonical();
     };
@@ -523,7 +526,8 @@ export default function App() {
   const handleOpenWatchPage = (movie: Movie) => {
     setWatchingMovieInitial(movie);
     setWatchingMovieId(movie.id);
-    const newUrl = `${window.location.pathname}?watch=${movie.id}`;
+    // real movies get their own /movie/ URL; anime and TV use synthetic ids and keep ?watch=
+    const newUrl = movie.id < 8_000_000 && activeTab !== 'tv_shows' && activeTab !== 'anime' ? moviePath(movie.title, movie.id) : `${window.location.pathname}?watch=${movie.id}`;
     window.history.pushState({ movieId: movie.id }, '', newUrl);
   };
 
@@ -566,7 +570,8 @@ export default function App() {
   const handleCloseWatchPage = () => {
     setWatchingMovieId(null);
     setWatchingMovieInitial(null);
-    const newUrl = window.location.pathname;
+    // from a /movie/ page go back to the section it was opened from, otherwise stay on the current path
+    const newUrl = parseMoviePath(window.location.pathname) ? urlForTab(activeTab) : window.location.pathname;
     window.history.pushState({}, '', newUrl);
   };
 

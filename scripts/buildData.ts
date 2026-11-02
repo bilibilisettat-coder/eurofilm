@@ -4,6 +4,7 @@
  * just without that list. Set EUROFILM_DATA_FIXTURE=path/to/fixture.json to build offline.
  */
 import fs from 'node:fs';
+import { fetchMovie, type MovieData } from '../src/seo/movieSeo';
 
 const TMDB_KEY = 'a9df3024ecdd6c3ed103bb998df53110'; // same public v3 key the site already uses client-side
 const TMDB = 'https://api.themoviedb.org/3';
@@ -184,4 +185,30 @@ export async function loadBuildData(): Promise<BuildData> {
     return [] as Headline[];
   });
   return { lists, news };
+}
+
+/**
+ * Details for every movie that gets a /movie/ page. Each fetch has a timeout and fails soft (that movie simply gets no page this build).
+ * Set EUROFILM_MOVIES_FIXTURE=path/to/movies.json (an array of MovieData) to build offline.
+ */
+export async function loadMovies(ids: number[]): Promise<Map<number, MovieData>> {
+  const out = new Map<number, MovieData>();
+  const fixture = process.env.EUROFILM_MOVIES_FIXTURE;
+  if (fixture) {
+    for (const m of JSON.parse(fs.readFileSync(fixture, 'utf8')) as MovieData[]) out.set(m.id, m);
+    return out;
+  }
+  const queue = [...new Set(ids)];
+  async function worker() {
+    for (let id = queue.shift(); id !== undefined; id = queue.shift()) {
+      try {
+        const m = await fetchMovie(id, AbortSignal.timeout(12000));
+        if (m) out.set(id, m);
+      } catch (e) {
+        console.warn(`buildData: movie ${id} failed: ${e}`);
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: 6 }, worker));
+  return out;
 }

@@ -1,10 +1,14 @@
-// Cloudflare Worker (static assets only). Deployed by Cloudflare Workers Builds on push.
+// Cloudflare Worker (src/worker.ts in front of the static assets). Deployed by Cloudflare Workers Builds on push.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "eurofilm",
+  "main": "src/worker.ts",
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
+    // The Worker handles every request first (?watch redirects, /movie/ pages, noindex on workers.dev), then hands off to the assets.
+    "run_worker_first": true,
     // Unknown URLs get dist/404.html with a real 404 status (no more soft 404s).
     "not_found_handling": "404-page",
     // Serves /anime from anime.html and /blog/<slug> from blog/<slug>.html without redirects.

@@ -35,7 +35,7 @@ export const SECTION_ROUTES: SectionRoute[] = [
     path: '/now-playing',
     label: 'Now Playing',
     h1: 'Movies in Theaters Now',
-    title: 'Movies in Theaters Now: Trailers & Showtimes Guide | EuroFilm',
+    title: 'Movies in Theaters Now: Trailers & Showtimes | EuroFilm',
     description:
       'See which movies are in theaters now. Official trailers, ratings, runtimes and release dates for every new release currently playing.',
     intro:
@@ -46,7 +46,7 @@ export const SECTION_ROUTES: SectionRoute[] = [
     path: '/upcoming',
     label: 'Upcoming Movies',
     h1: 'Upcoming Movies and New Trailers',
-    title: 'Upcoming Movies 2026: New Trailers & Release Dates | EuroFilm',
+    title: 'Upcoming Movies 2026: Trailers & Release Dates | EuroFilm',
     description:
       'The newest trailers for upcoming movies, with confirmed release dates and plot details for films arriving in theaters and on streaming soon.',
     intro:
@@ -70,7 +70,7 @@ export const SECTION_ROUTES: SectionRoute[] = [
     h1: 'Anime Trailers and Top Anime Series',
     title: 'Best Anime Series & Anime Movie Trailers | EuroFilm',
     description:
-      'Official trailers for the top-rated anime series and anime movies, with episode counts, scores, genres and synopses.',
+      'Official trailers for the top-rated anime series and anime movies, with episode counts, scores, genres and synopses. Updated regularly.',
     intro:
       'The best-rated anime series and films, from long-running shonen favourites to Studio Ghibli classics, with trailers, scores and episode counts.',
   },
@@ -81,7 +81,7 @@ export const SECTION_ROUTES: SectionRoute[] = [
     h1: 'Popular TV Shows and Series Trailers',
     title: 'Popular TV Shows: Series Trailers & Ratings | EuroFilm',
     description:
-      'Trailers and ratings for the most popular TV shows and series right now, with first air dates and plot summaries.',
+      'Trailers and ratings for the most popular TV shows and series right now, with first air dates and plot summaries. Updated regularly.',
     intro:
       'The series everyone is talking about, with trailers, ratings and premiere dates to help you choose what to stream next.',
   },
@@ -92,7 +92,7 @@ export const SECTION_ROUTES: SectionRoute[] = [
     h1: 'Bollywood and Indian Movie Trailers',
     title: 'Bollywood & Indian Movie Trailers | EuroFilm',
     description:
-      'Official trailers for new Bollywood and Indian movies, with release dates, cast and box office highlights.',
+      'Official trailers for new Bollywood and Indian movies, with release dates, cast and box office highlights. Updated regularly.',
     intro:
       'New and popular Indian cinema in one place, from Bollywood blockbusters to Tamil and Telugu hits, with trailers and release dates.',
   },
@@ -115,7 +115,7 @@ export const SECTION_ROUTES: SectionRoute[] = [
     h1: 'Movie and Entertainment News',
     title: 'Movie News & Entertainment Headlines | EuroFilm',
     description:
-      'The latest movie and entertainment news: casting, release dates, box office results and trailer drops.',
+      'The latest movie and entertainment news: casting, release dates, box office results and trailer drops, updated through the day.',
     intro:
       'Daily entertainment headlines covering casting news, release date changes, box office results and new trailer drops.',
     hasOwnH1: true,
@@ -127,7 +127,7 @@ export const SECTION_ROUTES: SectionRoute[] = [
     h1: 'EuroFilm Blog: Movie Reviews and Film Essays',
     title: 'EuroFilm Blog: Movie Reviews & Film Essays',
     description:
-      'Longform movie reviews and critical film essays on the biggest releases, from blockbusters to awards contenders.',
+      'Longform movie reviews and critical film essays on the biggest releases, from blockbusters to awards contenders. New reviews added regularly.',
     intro:
       'Longform reviews and critical essays on the year’s biggest films. No star-rating shortcuts: each piece explains what works, what does not and why.',
     hasOwnH1: true,
